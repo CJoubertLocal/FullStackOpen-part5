@@ -36,6 +36,10 @@ const App = () => {
     }
   }
 
+  const logout = (event) => {
+    setUser(null)
+  };
+
   const loginForm = () => (
     <>
       <LoginForm 
@@ -51,7 +55,7 @@ const App = () => {
   const blogForm = () => (
     <>
       <div>
-        {user.username} logged in
+        {user.username} logged in <button onClick={logout}>logout</button>
       </div>
       <div>
         {blogs.map(blog =>
