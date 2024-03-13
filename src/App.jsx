@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react'
-import Blog from './components/Blog'
+
 import LoginForm from './components/LoginForm'
+import Blog from './components/Blog'
 import Notification from './components/Notification'
+import BlogList from './components/BlogList'
 import CreateBlogForm from './components/CreateBlogForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -16,10 +18,14 @@ const App = () => {
   const [newBlogAuthor, setNewBlogAuthor] = useState('')
   const [newBlogURL, setNewBlogURL] = useState('')
 
-  useEffect(() => {
+  const updateAllBlogs = () => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
-    )  
+    )
+  }
+
+  useEffect(() => {
+    updateAllBlogs()
   }, [])
 
   useEffect(() => {
@@ -51,7 +57,7 @@ const App = () => {
     }
   }
 
-  const handleNewBlogSubmit = (event) => {
+  const handleNewBlogSubmit = async (event) => {
     event.preventDefault()
 
     const newBlog = {
@@ -60,11 +66,13 @@ const App = () => {
         "url": newBlogURL,
     }
 
-    blogService.createNewBlog(newBlog)
+    const res = await blogService.createNewBlog(newBlog)
 
     setNewBlogTitle('')
     setNewBlogAuthor('')
     setNewBlogURL('')
+
+    updateAllBlogs()
   }
 
   const logout = (event) => {
@@ -99,11 +107,15 @@ const App = () => {
         setURL={setNewBlogURL}
         handleSubmit={handleNewBlogSubmit}
       />
-      <div>
+
+      <BlogList blogs={blogs} />
+
+      {/* <div>
         {blogs.map(blog =>
           <Blog key={blog.id} blog={blog} />
         )}
-      </div>
+      </div> */}
+
     </>
   )
 
