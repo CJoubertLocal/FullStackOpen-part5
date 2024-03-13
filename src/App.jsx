@@ -18,6 +18,14 @@ const App = () => {
     )  
   }, [])
 
+  useEffect(() => {
+    const jwtInLocalStorage = window.localStorage.getItem('userLoggedIntoBlogSystem')
+    if (jwtInLocalStorage) {
+      const user = JSON.parse(jwtInLocalStorage)
+      setUser(user)
+    }
+  }, [])
+
   const handleLogin = async (event) => {
     event.preventDefault()
 
@@ -26,6 +34,7 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
+      window.localStorage.setItem('userLoggedIntoBlogSystem', JSON.stringify(user.token))
 
     } catch (exception) {
       console.log('username or password is incorrect')
@@ -38,6 +47,7 @@ const App = () => {
 
   const logout = (event) => {
     setUser(null)
+    window.localStorage.removeItem('userLoggedIntoBlogSystem')
   };
 
   const loginForm = () => (
