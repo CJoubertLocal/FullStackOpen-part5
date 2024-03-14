@@ -13,10 +13,11 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [notificationMessage, setNotificationMessage] = useState('')
   const [newBlogTitle, setNewBlogTitle] = useState('')
   const [newBlogAuthor, setNewBlogAuthor] = useState('')
   const [newBlogURL, setNewBlogURL] = useState('')
+  const [notification, setNotification] = useState(null)
+  const [useSuccessStyle, setUseSuccessStyle] = useState(false)
 
   const updateAllBlogs = () => {
     blogService.getAll().then(blogs =>
@@ -31,9 +32,9 @@ const App = () => {
   useEffect(() => {
     const jwtInLocalStorage = window.localStorage.getItem('userLoggedIntoBlogSystem')
     if (jwtInLocalStorage) {
-      const user = JSON.parse(jwtInLocalStorage)
-      setUser(user)
-      blogService.setToken(user.token)
+      const userJSON = JSON.parse(jwtInLocalStorage)
+      setUser(userJSON)
+      blogService.setToken(userJSON.token)
     }
   }, [])
 
@@ -45,10 +46,21 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
-      window.localStorage.setItem('userLoggedIntoBlogSystem', JSON.stringify(user.token))
+      window.localStorage.setItem('userLoggedIntoBlogSystem', JSON.stringify(user))
       blogService.setToken(user.token)
+      
+      setUseSuccessStyle(true)
+      setNotification('Login succeeded')
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000);
 
     } catch (exception) {
+      setUseSuccessStyle(false)
+      setNotification('Incorrect username or password')
+      setTimeout(() => {
+        setNotification(null)
+      }, 5000);
       console.log('username or password is incorrect')
       // setNotificationMessage('username or password is incorrect')
       // setTimeout(() => {
@@ -73,12 +85,24 @@ const App = () => {
     setNewBlogURL('')
 
     updateAllBlogs()
+
+    setUseSuccessStyle(true)
+    setNotification(`a new blog ${newBlogTitle} by ${newBlogAuthor} added`)
+    setTimeout(() => {
+      setNotification(null)
+    }, 5000);
   }
 
   const logout = (event) => {
     setUser(null)
     blogService.setToken(null)
     window.localStorage.removeItem('userLoggedIntoBlogSystem')
+
+    setUseSuccessStyle(true)
+    setNotification(`log out successful`)
+    setTimeout(() => {
+      setNotification(null)
+    }, 5000);
   };
 
   const loginForm = () => (
@@ -110,12 +134,6 @@ const App = () => {
 
       <BlogList blogs={blogs} />
 
-      {/* <div>
-        {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} />
-        )}
-      </div> */}
-
     </>
   )
 
@@ -123,6 +141,10 @@ const App = () => {
     <div>
       <h2>blogs</h2>
 
+      <Notification
+          message={notification} 
+          useSuccessStyle={useSuccessStyle} />
+      
       {
         user === null 
         ? loginForm() 
