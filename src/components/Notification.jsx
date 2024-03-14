@@ -1,4 +1,3 @@
-
 const Notification = ({message, useSuccessStyle}) => {
     const sucessStyle = {
       color: 'green',

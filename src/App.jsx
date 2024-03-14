@@ -18,6 +18,7 @@ const App = () => {
   const [newBlogURL, setNewBlogURL] = useState('')
   const [notification, setNotification] = useState(null)
   const [useSuccessStyle, setUseSuccessStyle] = useState(false)
+  const [showBlogCreationForm, setShowBlogCreationForm] = useState(false)
 
   const updateAllBlogs = () => {
     blogService.getAll().then(blogs =>
@@ -122,6 +123,7 @@ const App = () => {
       <div>
         {user.username} logged in <button onClick={logout}>logout</button>
       </div>
+      
       <CreateBlogForm 
         title={newBlogTitle}
         setTitle={setNewBlogTitle}
@@ -130,8 +132,10 @@ const App = () => {
         url={newBlogURL}
         setURL={setNewBlogURL}
         handleSubmit={handleNewBlogSubmit}
+        showBlogCreationForm={showBlogCreationForm}
+        setShowBlogCreationForm={setShowBlogCreationForm}
       />
-
+      
       <BlogList blogs={blogs} />
 
     </>
