@@ -4,6 +4,7 @@ import LoginForm from './components/LoginForm'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import BlogList from './components/BlogList'
+import Toggable from './components/Toggable'
 import CreateBlogForm from './components/CreateBlogForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -124,18 +125,20 @@ const App = () => {
         {user.username} logged in <button onClick={logout}>logout</button>
       </div>
       
-      <CreateBlogForm 
-        title={newBlogTitle}
-        setTitle={setNewBlogTitle}
-        author={newBlogAuthor}
-        setAuthor={setNewBlogAuthor}
-        url={newBlogURL}
-        setURL={setNewBlogURL}
-        handleSubmit={handleNewBlogSubmit}
-        showBlogCreationForm={showBlogCreationForm}
-        setShowBlogCreationForm={setShowBlogCreationForm}
-      />
-      
+      <Toggable buttonLabel='Add Blog'>
+        <CreateBlogForm 
+          title={newBlogTitle}
+          setTitle={setNewBlogTitle}
+          author={newBlogAuthor}
+          setAuthor={setNewBlogAuthor}
+          url={newBlogURL}
+          setURL={setNewBlogURL}
+          handleSubmit={handleNewBlogSubmit}
+          showBlogCreationForm={showBlogCreationForm}
+          setShowBlogCreationForm={setShowBlogCreationForm}
+        />
+      </Toggable>
+
       <BlogList blogs={blogs} />
 
     </>
